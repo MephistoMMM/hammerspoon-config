@@ -5,7 +5,7 @@ hs.loadSpoon("SpoonInstall")
 
 Install=spoon.SpoonInstall
 
-local hyper = {'ctrl', 'option'}
+local hyper = {'option', 'cmd'}
 
 local alert = require 'hs.alert'
 local application = require 'hs.application'
@@ -28,11 +28,11 @@ local key2App = {
   i = {'/Applications/iTerm.app', 'English', 2},
   j = {'/Applications/Emacs.app', 'English', 2},
   c = {'/Applications/Google Chrome.app', 'English', 1},
-  l = {'/System/Library/CoreServices/Finder.app', 'English', 1},
+  f = {'/System/Library/CoreServices/Finder.app', 'English', 1},
   k = {'/Applications/Kindle.app', 'English', 2},
   n = {'/Applications/NeteaseMusic.app', 'Chinese', 1},
   w = {'/Applications/WeChat.app', 'Chinese', 1},
-  s = {'/Applications/System Preferences.app', 'English', 1},
+  s = {'/Applications/Safari.app', 'English', 1},
   d = {'/Applications/Dash.app', 'English', 1},
   b = {'/Applications/MindNode.app', 'Chinese', 1},
   p = {'/Applications/Preview.app', 'Chinese', 2},
@@ -107,10 +107,10 @@ function findApplication(appPath)
 end
 
 function launchApp(appPath)
-    application.launchOrFocus(appPath)
+  application.launchOrFocus(appPath)
 
-    -- Move the application's window to the specified screen.
-    for key, app in pairs(key2App) do
+  -- Move the application's window to the specified screen.
+  for key, app in pairs(key2App) do
     local path = app[1]
     local screenNumber = app[3]
 
@@ -178,12 +178,12 @@ moveToScreen = function(win, n, showNotify)
   local screens = hs.screen.allScreens()
   if n > #screens then
     if showNotify then
-	    hs.alert.show("No enough screens " .. #screens)
+      hs.alert.show("No enough screens " .. #screens)
     end
   else
     local toScreen = hs.screen.allScreens()[n]:name()
     if showNotify then
-	    hs.alert.show("Move " .. win:application():name() .. " to " .. toScreen)
+      hs.alert.show("Move " .. win:application():name() .. " to " .. toScreen)
     end
     hs.layout.apply({{nil, win:title(), toScreen, hs.layout.maximized, nil, nil}})
   end
@@ -220,47 +220,47 @@ end)
 
 -- Start or focus application.
 for key, app in pairs(key2App) do
-    hotkey.bind(
-        hyper, key,
-        function()
-            toggleApplication(app)
-    end)
+  hotkey.bind(
+    hyper, key,
+    function()
+      toggleApplication(app)
+  end)
 end
 
 -- Move application to screen.
 hs.hotkey.bind(
-    hyper, "1",
-    function()
-        moveToScreen(hs.window.focusedWindow(), 1, true)
+  hyper, "1",
+  function()
+    moveToScreen(hs.window.focusedWindow(), 1, true)
 end)
 
 hs.hotkey.bind(
-    hyper, "2",
-    function()
-        moveToScreen(hs.window.focusedWindow(), 2, true)
+  hyper, "2",
+  function()
+    moveToScreen(hs.window.focusedWindow(), 2, true)
 end)
 
 -- Binding key to start plugin.
 Install:andUse(
-    "WindowHalfsAndThirds",
-    {
-        config = {use_frame_correctness = true},
-        hotkeys = {max_toggle = {hyper, "I"}}
+  "WindowHalfsAndThirds",
+  {
+    config = {use_frame_correctness = true},
+    hotkeys = {max_toggle = {hyper, "I"}}
 })
 
 Install:andUse(
-    "WindowGrid",
-    {
-        config = {gridGeometries = {{"6x4"}}},
-        hotkeys = {show_grid = {hyper, ","}},
-        start = true
+  "WindowGrid",
+  {
+    config = {gridGeometries = {{"6x4"}}},
+    hotkeys = {show_grid = {hyper, ","}},
+    start = true
 })
 
 -- Reload config.
 hs.hotkey.bind(
-    hyper, "'", function ()
-        speaker:speak("Offline to reloading...")
-        hs.reload()
+  hyper, "'", function ()
+    speaker:speak("Offline to reloading...")
+    hs.reload()
 end)
 
 -- We put reload notify at end of config, notify popup mean no error in config.
